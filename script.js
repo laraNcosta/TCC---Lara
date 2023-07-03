@@ -1,96 +1,102 @@
-const modal = document.querySelector('.modal-container')
-const tbody = document.querySelector('tbody')
-const sNome = document.querySelector('#m-nome')
-const sFuncao = document.querySelector('#m-funcao')
-const sSalario = document.querySelector('#m-salario')
-const btnSalvar = document.querySelector('#btnSalvar')
-
-let itens
-let id
-
-function openModal(edit = false, index = 0) {
-  modal.classList.add('active')
-
-  modal.onclick = e => {
-    if (e.target.className.indexOf('modal-container') !== -1) {
-      modal.classList.remove('active')
-    }
-  }
-
-  if (edit) {
-    sNome.value = itens[index].nome
-    sFuncao.value = itens[index].funcao
-    sSalario.value = itens[index].salario
-    id = index
-  } else {
-    sNome.value = ''
-    sFuncao.value = ''
-    sSalario.value = ''
-  }
+document.addEventListener("DOMContentLoaded", function() {
+    const form = document.getElementById("employeeForm");
+    const tableBody = document.querySelector("#employeeTable tbody");
+    const tableHeader = document.getElementById("tableHeader");
   
-}
-
-function editItem(index) {
-
-  openModal(true, index)
-}
-
-function deleteItem(index) {
-  itens.splice(index, 1)
-  setItensBD()
-  loadItens()
-}
-
-function insertItem(item, index) {
-  let tr = document.createElement('tr')
-
-  tr.innerHTML = `
-    <td>${item.nome}</td>
-    <td>${item.funcao}</td>
-    <td>R$ ${item.salario}</td>
-    <td class="acao">
-      <button onclick="editItem(${index})"><i class='bx bx-edit' ></i></button>
-    </td>
-    <td class="acao">
-      <button onclick="deleteItem(${index})"><i class='bx bx-trash'></i></button>
-    </td>
-  `
-  tbody.appendChild(tr)
-}
-
-btnSalvar.onclick = e => {
+    let editMode = false;
+    let editRow = null;
   
-  if (sNome.value == '' || sFuncao.value == '' || sSalario.value == '') {
-    return
-  }
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+  
+      const name = document.getElementById("nameInput").value;
+      const birthDate = document.getElementById("birthInput").value;
+      const gender = document.getElementById("genderInput").value;
+      const type = document.getElementById("typeInput").value;
+      const position = document.getElementById("positionInput").value;
+      const email = document.getElementById("emailInput").value;
+      const cpf = document.getElementById("cpfInput").value;
+      
+  
+      if (name === "" || birthDate === "" || gender === "" || type === "" || position === "" || email === "" || cpf === "") {
+        alert("Por favor, preencha todos os campos.");
+        return;
+      }
+  
+      if (editMode) {
+        const cells = editRow.cells;
+        cells[0].textContent = name;
+        cells[1].textContent = birthDate;
+        cells[2].textContent = gender;
+        cells[3].textContent = type;
+        cells[4].textContent = position;
+        cells[5].textContent = email;
+        cells[6].textContent = cpf;
+        
+  
+        editMode = false;
+        editRow = null;
+        form.reset();
+        form.querySelector("button[type='submit']").textContent = "Adicionar";
+      } else {
+        const newRow = tableBody.insertRow();
+        newRow.innerHTML = `
+          <td>${name}</td>
+          <td>${birthDate}</td>
+          <td>${gender}</td>
+          <td>${type}</td>
+          <td>${position}</td>
+          <td>${email}</td>
+          <td>${cpf}</td>
+          
+          <td>
+            <button class="button-edit">Editar</button>
+            <button class="button-delete">Excluir</button>
+          </td>
+        `;
+  
+        form.reset();
+        tableHeader.style.display = "table-header-group";
+      }
+  
+      if (tableBody.rows.length === 0) {
+        tableHeader.style.display = "none";
+      } else {
+        tableHeader.style.display = "table-header-group";
+      }
+    });
+  
+    tableBody.addEventListener("click", function(e) {
+      if (e.target.classList.contains("button-delete")) {
+        const row = e.target.parentNode.parentNode;
+        row.remove();
+  
+        if (tableBody.rows.length === 0) {
+          tableHeader.style.display = "none";
+        }
+      } else if (e.target.classList.contains("button-edit")) {
+        const row = e.target.parentNode.parentNode;
+        const cells = row.cells;
+        const name = cells[0].textContent;
+        const birthDate = cells[1].textContent;
+        const gender = cells[2].textContent;
+        const type = cells[3].textContent;
+        const position = cells[4].textContent;
+        const email = cells[5].textContent;
+        const cpf = cells[6].textContent;
+        
+  
+        document.getElementById("nameInput").value = name;
+        document.getElementById("birthInput").value = birthDate;
+        document.getElementById("genderInput").value = gender;
+        document.getElementById("typeInput").value = type;
+        document.getElementById("positionInput").value = position;
+        document.getElementById("emailInput").value = email;
+        document.getElementById("cpfInput").value = cpf;
 
-  e.preventDefault();
-
-  if (id !== undefined) {
-    itens[id].nome = sNome.value
-    itens[id].funcao = sFuncao.value
-    itens[id].salario = sSalario.value
-  } else {
-    itens.push({'nome': sNome.value, 'funcao': sFuncao.value, 'salario': sSalario.value})
-  }
-
-  setItensBD()
-
-  modal.classList.remove('active')
-  loadItens()
-  id = undefined
-}
-
-function loadItens() {
-  itens = getItensBD()
-  tbody.innerHTML = ''
-  itens.forEach((item, index) => {
-    insertItem(item, index)
-  })
-
-}
-
-const getItensBD = () => JSON.parse(localStorage.getItem('dbfunc')) ?? []
-const setItensBD = () => localStorage.setItem('dbfunc', JSON.stringify(itens))
-
-loadItens()
+        editMode = true;
+        editRow = row;
+        form.querySelector("button[type='submit']").textContent = "Salvar";
+      }
+    });
+  });
