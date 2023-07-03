@@ -3,53 +3,77 @@
 
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema para Gestão de ONG's</title>
+  <title>Gestão de ONG's</title>
   <link rel="stylesheet" href="style.css">
-  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
 </head>
 
 <body>
   <div class="container">
-    <div class="header">
-      <span>Cadastro de Funcionários</span>
-      <button onclick="openModal()" id="new">Incluir</i></button>
-    </div>
-
-    <div class="divTable">
-      <table>
-        <thead>
+    <h1>Cadastro de Voluntários e Colaboradores</h1>
+    <form id="employeeForm">
+        <div class="form-row">
+          <div class="form-col">
+            <label for="nameInput">Nome:</label>
+            <input type="text" id="nameInput">
+          </div>
+          <div class="form-col">
+            <label for="birthInput">Data de Nascimento:</label>
+            <input type="date" id="birthInput">
+          </div>
+          <div class="form-col">
+            <label for="genderInput">Sexo:</label>
+            <select id="genderInput" required>
+              <option value="">Selecione</option>
+              <option value="Masculino">Masculino</option>
+              <option value="Feminino">Feminino</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-col">
+            <label for="typeInput">Tipo:</label>
+            <select id="typeInput" required>
+              <option value="">Selecione</option>
+              <option value="Voluntário">Voluntário</option>
+              <option value="Colaborador">Colaborador</option>
+            </select>
+          </div>
+          <div class="form-col">
+            <label for="positionInput">Função:</label>
+            <input type="text" id="positionInput">
+          </div>
+          <div class="form-col">
+            <label for="emailInput">Email:</label>
+            <input type="text" id="emailInput">
+          </div>
+          <div class="form-col">
+            <label for="cpfInput">CPF:</label>
+            <input type="text" id="cpfInput">
+          </div>
+        </div>
+        <button type="submit" id="addButton">Adicionar</button>
+      </form>
+    <div class="table-container">
+      <table id="employeeTable">
+        <thead id="tableHeader" style="display: none;">
           <tr>
             <th>Nome</th>
+            <th>Data de Nascimento</th>
+            <th>Sexo</th>
+            <th>Tipo</th>
             <th>Função</th>
-            <th>Salário</th>
-            <th class="acao">Editar</th>
-            <th class="acao">Excluir</th>
+            <th>Email</th>
+            <th>CPF</th>
+            <th>Ações</th>
           </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
-
-    <div class="modal-container">
-      <div class="modal">
-        <form>
-          <label for="m-nome">Nome</label>
-          <input id="m-nome" type="text" required />
-  
-          <label for="m-funcao">Função</label>
-          <input id="m-funcao" type="text" required />
-  
-          <label for="m-salario">Salário</label>
-          <input id="m-salario" type="number" required />
-          <button id="btnSalvar">Salvar</button>
-        </form>
-      </div>
-    </div>
-
   </div>
+
   <script src="script.js"></script>
 </body>
 
